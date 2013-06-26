@@ -4,6 +4,7 @@ from inspect import stack as inspect_stack
 from logging import getLogger
 from rawes import Elastic
 from subprocess import check_output
+from time import sleep
 
 
 __author__ = 'ahammond'
@@ -66,6 +67,7 @@ def drop_below_threshold(port, path, threshold):
     es = ElasticSearch(port=port)
     while current_usage(path) > threshold:
         es.delete_oldest_index()
+        sleep(0.1)      # give the os a chance to recognize the released disk.
 
 
 if '__main__' == __name__:
