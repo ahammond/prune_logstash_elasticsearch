@@ -22,7 +22,7 @@ class ElasticSearch():
 
     @property
     def es(self):
-        l = getLogger("{}.{}".format(self.__class__.__name__, inspect_stack()[1][3]))
+        l = getLogger("{}.{}".format(self.__class__.__name__, inspect_stack()[0][3]))
         if self._es is None:
             uri = '{0}:{1}'.format(self.host, self.port)
             l.debug('connecting to: %r', uri)
@@ -31,7 +31,7 @@ class ElasticSearch():
 
     @property
     def stats(self):
-        l = getLogger("{}.{}".format(self.__class__.__name__, inspect_stack()[1][3]))
+        l = getLogger("{}.{}".format(self.__class__.__name__, inspect_stack()[0][3]))
         if self._stats is None:
             self._stats = self.es.get('_stats')
             l.debug('stats: %r', self._stats)
@@ -39,7 +39,7 @@ class ElasticSearch():
 
     @property
     def indices(self):
-        l = getLogger("{}.{}".format(self.__class__.__name__, inspect_stack()[1][3]))
+        l = getLogger("{}.{}".format(self.__class__.__name__, inspect_stack()[0][3]))
         if self._indices is None:
             self._indices = [x for x in self.stats.get(u'indices', {}).keys() if x.startswith(u'logstash')]
             self._indices.sort()
@@ -47,14 +47,14 @@ class ElasticSearch():
         return self._indices
 
     def delete_oldest_index(self):
-        l = getLogger("{}.{}".format(self.__class__.__name__, inspect_stack()[1][3]))
+        l = getLogger("{}.{}".format(self.__class__.__name__, inspect_stack()[0][3]))
         oldest_index = self.indices.pop(0)
         l.debug('deleting %r', oldest_index)
         return self.es.delete(oldest_index)
 
 
 def current_usage(path):
-    l = getLogger('{0}'.format(inspect_stack()[1][3]))
+    l = getLogger('{0}'.format(inspect_stack()[0][3]))
     filesystem, blocks, blocks_used, blocks_avail, percentage, mountpoint = \
         check_output(['/bin/df', path]).split('\n')[1].split()
     usage = int(percentage[:-1])
