@@ -74,14 +74,20 @@ if '__main__' == __name__:
 
     parser = ArgumentParser(description='''Retention handler for logstash elasticsearch data.
 
-
+    While disk usage of the filesystem hosting the elasticsearch data is above the threshold,
+    remove the oldest logstash index from elasticsearch.
     ''')
-    parser.add_argument('-v', '--verbose', action='count')
-    parser.add_argument('-q', '--quiet', action='count')
+    parser.add_argument('-v', '--verbose', action='count',
+                        help='increase logging verbosity')
+    parser.add_argument('-q', '--quiet', action='count',
+                        help='decrease logging verbosity')
 
-    parser.add_argument('-p', '--port', default=9200)
-    parser.add_argument('-d', '--dir_name', default=ELASTICSEARCH_INDEX_DIR)
-    parser.add_argument('-t', '--threshold', default=70)
+    parser.add_argument('-p', '--port', default=9200,
+                        help='the port hosting elasticsearch (default: 9200)')
+    parser.add_argument('-d', '--dir_name', default=ELASTICSEARCH_INDEX_DIR,
+                        help='the directory hosting the elasticsearch data (default: {0})'.format(ELASTICSEARCH_INDEX_DIR))
+    parser.add_argument('-t', '--threshold', default=70,
+                        help='the target disk usage (default: 70)')
 
     arguments = parser.parse_args()
 
