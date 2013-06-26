@@ -41,7 +41,7 @@ class ElasticSearch():
     def indices(self):
         l = getLogger("{}.{}".format(self.__class__.__name__, inspect_stack()[0][3]))
         if self._indices is None:
-            self._indices = [x for x in self.stats.get(u'indices', {}).keys() if x.startswith(u'logstash')]
+            self._indices = [x for x in self.stats.get(u'_all', {}).get(u'indices', {}).keys() if x.startswith(u'logstash')]
             self._indices.sort()
             l.debug('indices: %r', self._indices)
         return self._indices
